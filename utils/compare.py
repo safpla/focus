@@ -55,9 +55,9 @@ def show_result_case(filename, config, method=0, model_name=None,
 
     num = 0
     for data in tqdm.tqdm(datas):
-        num += 1
-        if num != 69:
-            continue
+        #num += 1
+        #if num != 69:
+        #    continue
         if len(data['info']) == 0:
             print('no result')
             tags_gd.append([])
@@ -194,7 +194,7 @@ if __name__ == "__main__":
         graph_path = 'cnn_model_one_layer'
         graph_name = 'model_cnn'
     elif method == 2:
-        model_name = 'batch_size_1-filter_num_100-filter_lengths_1 2 3 4 5-dfdt_only_1 2-lossweights_0.25 0.25 0.5-sepa_conv_0-class-1-pp_none-y_dis_log-round1-focus_hierarchical_supervision'
+        model_name = 'batch_size_1-filter_num_100-filter_lengths_1 2 3 4 5-dfdt_only_0 1-lossweights_0.25 0.25 0.5-sepa_conv_1-class-1-pp_none-y_dis_log-round1-focus_hierarchical_supervision'
         graph_path = 'cnn_model_hierarchical_supervision'
         graph_name = 'model_cnn_hierarchical_supervision'
         config_file = 'config1.ini'
