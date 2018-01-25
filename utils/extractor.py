@@ -385,7 +385,23 @@ class Extractor_CNN_sentence_hs(Extractor_CNN_sentence):
         gpu_options = tf.GPUOptions(allow_growth=True)
         self.sess = tf.InteractiveSession(config=tf.ConfigProto(gpu_options=gpu_options, allow_soft_placement=True))
 
-        Y_distribution = [1] * label_class
+        y_dis_mode = config['y_dis_mode']
+        Y_distribution = []
+        Y_distribution.append([1] * label_class)
+        Y_distribution.append([1] * label_class)
+
+        if y_dis_mode == 'major_six':
+            major_six = [1, 2, 4, 11, 14, 15]
+            for i in range(label_class):
+                if i not in major_six:
+                    Y_distribution[0][i] = 0
+                    Y_distribution[1][i] = 0
+        elif y_dis_mode.split('_')[0] == 'refine':
+            refine_class = int(y_dis_mode.split('_')[1])
+            for i in range(label_class):
+                if i != refine_class:
+                    Y_distribution[0][i] = 0
+                    Y_distribution[1][i] = 0
         self.model = graph_module.Model(W_embedding, Y_distribution, config,
                            multilabel=is_multilabel)
         # load model
@@ -440,10 +456,6 @@ class Extractor_CNN_sentence_hs(Extractor_CNN_sentence):
         sents_result['court_results'] = court_results
         sents_result['court_sents'] = court_sents
         sents_result['docu_logits'] = Y_predict_logits_full
-
-        print('dfdt_results:', dfdt_results)
-        print('court_results:', court_results)
-        print('docu_logits:', Y_predict_logits_full)
 
         if return_sents_result:
             return Y_predict_full, Y_predict_logits_full, sents_result

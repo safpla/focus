@@ -185,19 +185,19 @@ def main(input_file, method, watch_class, model_name, graph_path, graph_name,
 
 
 if __name__ == "__main__":
-    input_file = '../Data/dc_labeled/labeled-Focus4Project-189-2018.01.09-test.json'
+    input_file = '../Data/dc_labeled/labeled-Focus4Project-189-2018.01.22-test.json'
     method = 2 # 0: rule, 1: normal cnn, 2: hs cnn
-    watch_class = 2
+    watch_class = 11
     config = {}
     if method == 1:
         model_name = '1_batch_size_16-norm_lim_3.0-grad_lim_5.0-filter_num_300-round1-data18'
         graph_path = 'cnn_model_one_layer'
         graph_name = 'model_cnn'
     elif method == 2:
-        model_name = 'batch_size_1-filter_num_100-filter_lengths_1 2 3 4 5-dfdt_only_0 1-lossweights_0.25 0.25 0.5-sepa_conv_1-class-1-pp_none-y_dis_log-round1-focus_hierarchical_supervision'
+        model_name = 'batch_size_1-filter_num_300-filter_lengths_1 2 3 4 5-dfdt_only_0 1-lossweights_0.25 0.25 0.5-sepa_conv_1-class-1-pp_none-y_dis_major_six-round1-focus_hierarchical_supervision'
         graph_path = 'cnn_model_hierarchical_supervision'
         graph_name = 'model_cnn_hierarchical_supervision'
-        config_file = 'config1.ini'
+        config_file = 'config1.1.ini'
         mission = 'focus_hierarchical_supervision'
         config = config_utils.Config()(all_in_one_root + '/all_in_one/config/' + mission + '/' + config_file)['model_parameter']
     elif method == 3:
