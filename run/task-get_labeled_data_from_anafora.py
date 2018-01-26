@@ -14,7 +14,7 @@ def main():
     params = {}
     dp = DataProcessor(params)
     folder = 'Focus4Project'
-    date = '2018.01.17'
+    date = '2018.01.25'
     server = '189'
     mode = 'train'
 

@@ -466,15 +466,11 @@ class Extractor_CNN_sentence_hs(Extractor_CNN_sentence):
         prediction = np.asarray(prediction)
         prediction = np.sum(prediction, axis=0)
 
-        iClass = int(self.config['iClass'])
-        label2string_temp = copy.deepcopy(label2string)
-        if iClass != -1:
-            label2string_temp = {1 : label2string_temp[iClass+1]}
         tags_in_str = [1]
         for ind, tag in enumerate(prediction.tolist()):
             if tag > 0:
                 # label2string starts from 1
-                tags_in_str.append(label2string_temp[ind + 1])
+                tags_in_str.append(label2string[ind + 1])
         return tags_in_str
 
     def max_logits(self, prediction):
@@ -513,16 +509,16 @@ class Extractor_CNN_sentence_hs(Extractor_CNN_sentence):
         court_input = []
         # remove empty sentence
         for sent in dfdt_cut_sents:
-            if len(sent) > 12:
+            if len(sent) > 14:
                 dfdt_input.append(sent)
         for sent in court_cut_sents:
-            if len(sent) > 12:
+            if len(sent) > 14:
                 court_input.append(sent)
 
         if len(dfdt_input) == 0:
-            dfdt_input = ['没有内容']
+            dfdt_input = [['padding'] * 8]
         if len(court_input) == 0:
-            court_input = ['没有内容']
+            court_input = [['padding'] * 8]
         # predict
         predict_sentence, predict_sentence_logits, sents_result = self.decoding(
             dfdt_input, court_input,

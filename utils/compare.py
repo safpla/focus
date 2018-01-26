@@ -17,7 +17,8 @@ sys.path.append(all_in_one_root)
 from all_in_one.config import config_utils
 
 def show_result_case(filename, config, method=0, model_name=None,
-                     graph_path=None, graph_name=None, watch_class=0):
+                     graph_path=None, graph_name=None, mission=None,
+                     mission_data=None, watch_class=0):
     input_stream = codecs.open(filename, 'r', encoding='utf-8')
     datas = json.load(input_stream)
     tags_gd = []
@@ -28,15 +29,16 @@ def show_result_case(filename, config, method=0, model_name=None,
         if not model_name:
             raise Exception("model_name is not provided")
         extractor = extractor_set.Extractor_CNN_sentence(
-            mission_data='focus',
+            mission=mission,
+            mission_data=mission_data,
             model_name=model_name)
     elif method == 2:
         if not model_name:
             raise Exception("model_name is not provided")
         extractor = extractor_set.Extractor_CNN_sentence_hs(
             config,
-            mission='focus_hierarchical_supervision',
-            mission_data='focus_hierarchical_supervision',
+            mission=mission,
+            mission_data=mission_data,
             graph_path=graph_path,
             graph_name=graph_name,
             model_name=model_name,
@@ -45,8 +47,8 @@ def show_result_case(filename, config, method=0, model_name=None,
         if not model_name:
              raise Exception("model_name is not provided")
         extractor = extractor_set.Extractor_CNN_sentence_hs_rule_emb(
-            mission='focus_hierarchical_supervision_rule_emb',
-            mission_data='focus_hierarchical_supervision_rule_emb',
+            mission=mission,
+            mission_data=mission_data,
             graph_path=graph_path,
             graph_name=graph_name,
             model_name=model_name)
@@ -121,12 +123,14 @@ def show_result_case(filename, config, method=0, model_name=None,
 
 
 def main(input_file, method, watch_class, model_name, graph_path, graph_name,
-         config):
+         mission, mission_data, config):
     tags_gd, tags_pd = show_result_case(input_file, config,
                                         method=method,
                                         model_name=model_name,
                                         graph_path=graph_path,
                                         graph_name=graph_name,
+                                        mission=mission,
+                                        mission_data=mission_data,
                                         watch_class=watch_class)
 
     tp = [0 for _ in range(len(label2index))]
@@ -187,18 +191,19 @@ def main(input_file, method, watch_class, model_name, graph_path, graph_name,
 if __name__ == "__main__":
     input_file = '../Data/dc_labeled/labeled-Focus4Project-189-2018.01.22-test.json'
     method = 2 # 0: rule, 1: normal cnn, 2: hs cnn
-    watch_class = 11
+    watch_class = 1
     config = {}
     if method == 1:
         model_name = '1_batch_size_16-norm_lim_3.0-grad_lim_5.0-filter_num_300-round1-data18'
         graph_path = 'cnn_model_one_layer'
         graph_name = 'model_cnn'
     elif method == 2:
-        model_name = 'batch_size_1-filter_num_300-filter_lengths_1 2 3 4 5-dfdt_only_0 1-lossweights_0.25 0.25 0.5-sepa_conv_1-class-1-pp_none-y_dis_major_six-round1-focus_hierarchical_supervision'
+        model_name = 'batch_size_1-filter_num_300-filter_lengths_1 2 3 4 5-dfdt_only_0 1-lossweights_0.25 0.25 0.5-sepa_conv_1-pp_none-y_dis_log-round1-focus_hierarchical_supervision_01_25-config1.1.ini'
         graph_path = 'cnn_model_hierarchical_supervision'
         graph_name = 'model_cnn_hierarchical_supervision'
         config_file = 'config1.1.ini'
         mission = 'focus_hierarchical_supervision'
+        mission_data = 'focus_hierarchical_supervision_01_25'
         config = config_utils.Config()(all_in_one_root + '/all_in_one/config/' + mission + '/' + config_file)['model_parameter']
     elif method == 3:
         model_name = 'batch_size_1-filter_num_300-filter_lengths_1 2 3 4 5-lossweights_0.25 0.25 0.5-sepa_conv_1-dim_rule_100'
@@ -208,4 +213,4 @@ if __name__ == "__main__":
         model_name = None
         graph_path = None
         graph_name = None
-    main(input_file, method, watch_class, model_name, graph_path, graph_name, config)
+    main(input_file, method, watch_class, model_name, graph_path, graph_name, mission, mission_data, config)
